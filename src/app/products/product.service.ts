@@ -16,11 +16,21 @@ export class ProductService {
   private productsUrl = 'api/products';
   private suppliersUrl = this.supplierService.suppliersUrl;
 
+  // STEPS to transform the data
+  // - map the emitted array (rxjs - map operator)
+  // - map the array elements (javascript - array map function)
+  // - transform each array element (use javascript object literal)
   products$ = this.http.get<Product[]>(this.productsUrl)
     .pipe(
-      // map(products =>
-      //   products.map(product => product.price * 1.5)
-      // ),
+      map(products =>
+        // the below map is array's map method
+        // to transform each product we are using an object literal ({........}) with the required data
+        products.map(product => ({
+          ...product,
+          price: product.price * 1.5,
+          searchKey: [product.productName]
+        }) as Product)
+      ),
       tap(data => console.log('Products: ', JSON.stringify(data))),
       // catch & rethrow strategy
       catchError(this.handleError)

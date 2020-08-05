@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { EMPTY, Subject, combineLatest } from 'rxjs';
+import { EMPTY, Subject, combineLatest, BehaviorSubject } from 'rxjs';
 
 import { ProductService } from './product.service';
 import { catchError, map, startWith } from 'rxjs/operators';
@@ -18,16 +18,13 @@ export class ProductListComponent {
   // Subject is an observable that is both observer & observable
   // categorySelectedSubject is the observer
   // categorySelectedAction$ is the observable / action stream
-  private categorySelectedSubject = new Subject<number>();
+  private categorySelectedSubject = new BehaviorSubject<number>(0);
   categorySelectedAction$ = this.categorySelectedSubject.asObservable();
 
   // combined the action stream with data stream
   products$ = combineLatest([
     this.productService.productsWithCategory$,
     this.categorySelectedAction$
-      .pipe(
-        startWith(0)
-      )
   ])
     .pipe(
       map(([products, selectedCategoryId]) =>

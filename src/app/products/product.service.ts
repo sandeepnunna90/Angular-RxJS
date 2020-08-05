@@ -12,16 +12,17 @@ import { SupplierService } from '../suppliers/supplier.service';
   providedIn: 'root'
 })
 export class ProductService {
+  // FYI... change url to test the error handling
   private productsUrl = 'api/products';
   private suppliersUrl = this.supplierService.suppliersUrl;
 
-  constructor(private http: HttpClient,
-              private supplierService: SupplierService) { }
+  constructor(private http: HttpClient, private supplierService: SupplierService) { }
 
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.productsUrl)
       .pipe(
         tap(data => console.log('Products: ', JSON.stringify(data))),
+        // catch & rethrow strategy
         catchError(this.handleError)
       );
   }
@@ -52,6 +53,7 @@ export class ProductService {
       errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
     }
     console.error(err);
+    // throwError propagates the error to the component
     return throwError(errorMessage);
   }
 

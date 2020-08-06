@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { throwError, Observable, of } from 'rxjs';
-import { map, tap, concatMap } from 'rxjs/operators';
+import { map, tap, concatMap, mergeMap } from 'rxjs/operators';
 import { Supplier } from './supplier';
 
 @Injectable({
@@ -24,6 +24,11 @@ export class SupplierService {
       concatMap(id => this.http.get<Supplier>(`${this.suppliersUrl}/${id}`))
     );
 
+  supplierWithMergeMap$ = of(1, 5, 8)
+    .pipe(
+      tap(id => console.log(`mergeMap source Observable `, id)),
+      mergeMap(id => this.http.get<Supplier>(`${this.suppliersUrl}/${id}`))
+    );
   // higher order observable - subscribes to supplier observable
   // nested subscriptions don't work with async pipe
   constructor(private http: HttpClient) {
@@ -33,9 +38,8 @@ export class SupplierService {
     //       item => console.log('map result', item)
     //     )
     //   );
-    this.supplierWithConcatMap$.subscribe(
-      item => console.log('concatMap result', item)
-    );
+    this.supplierWithConcatMap$.subscribe(item => console.log('concatMap result', item));
+    this.supplierWithMergeMap$.subscribe(item => console.log('mergeMap result', item));
   }
 
   private handleError(err: any): Observable<never> {

@@ -18,10 +18,14 @@ export class SupplierService {
       map(id => this.http.get<Supplier>(`${this.suppliersUrl}/${id}`))
     );
 
+  // higher order observable - subscribes to supplier observable
+  // nested subscriptions don't work with 
   constructor(private http: HttpClient) {
     this.supplierWithMap$
       .subscribe(
-        item => console.log('map result', item)
+        o => o.subscribe( // o -> inner observable
+          item => console.log('map result', item)
+        )
       );
   }
 

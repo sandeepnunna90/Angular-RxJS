@@ -44,9 +44,9 @@ export class SupplierService {
     //       item => console.log('map result', item)
     //     )
     //   );
-    this.supplierWithConcatMap$.subscribe(item => console.log('concatMap result', item));
-    this.supplierWithMergeMap$.subscribe(item => console.log('mergeMap result', item));
-    this.supplierWithSwitchMap$.subscribe(item => console.log('switchMap result', item));
+    // this.supplierWithConcatMap$.subscribe(item => console.log('concatMap result', item));
+    // this.supplierWithMergeMap$.subscribe(item => console.log('mergeMap result', item));
+    // this.supplierWithSwitchMap$.subscribe(item => console.log('switchMap result', item));
   }
 
   private handleError(err: any): Observable<never> {

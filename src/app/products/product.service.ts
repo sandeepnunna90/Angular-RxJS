@@ -68,6 +68,15 @@ export class ProductService {
     scan((acc: Product[], value: Product) => [...acc, value])
   );
 
+  selectedProductSuppliers$ = combineLatest([
+    this.selectedProduct$,
+    this.supplierService.suppliers$
+  ]).pipe(
+    map(([selectedProduct, suppliers]) =>
+      suppliers.filter(supplier => selectedProduct.supplierIds.includes(supplier.id))
+    )
+  );
+
   constructor(
     private http: HttpClient,
     private supplierService: SupplierService,

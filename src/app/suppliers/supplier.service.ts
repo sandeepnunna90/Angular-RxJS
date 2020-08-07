@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { throwError, Observable, of } from 'rxjs';
-import { map, tap, concatMap, mergeMap, switchMap } from 'rxjs/operators';
+import { map, tap, concatMap, mergeMap, switchMap, shareReplay, catchError } from 'rxjs/operators';
 import { Supplier } from './supplier';
 
 @Injectable({
@@ -10,6 +10,13 @@ import { Supplier } from './supplier';
 })
 export class SupplierService {
   suppliersUrl = 'api/suppliers';
+
+  suppliers$ = this.http.get<Supplier[]>(this.suppliersUrl)
+    .pipe(
+      tap(data => console.log('suppliers', JSON.stringify(data))),
+      shareReplay(1),
+      catchError(this.handleError)
+    );
 
   // 1, 5, 8 - supplier ids
   // of -> creates an observable stream
